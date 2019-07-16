@@ -237,7 +237,7 @@ module GPX
       @attributes.each do |k,v|
         k = v.namespace.prefix + ':' + k if v.namespace
         gpx_header[k] = v.value
-      end 
+      end
 
       @namespace_defs.each do |nsd|
         tag = 'xmlns'
@@ -248,18 +248,19 @@ module GPX
       end
       return gpx_header
     end
- 
+
     def generate_xml_doc
       @version ||= '1.1'
       version_dir = version.gsub('.','/')
 
       gpx_header = attributes_and_nsdefs_as_gpx_attributes
-      
+
+      gpx_header['xmlns'] = "http://www.topografix.com/GPX/1/1"
       gpx_header['version'] = @version.to_s if !gpx_header['version']
       gpx_header['creator'] = DEFAULT_CREATOR if !gpx_header['creator']
       gpx_header['xsi:schemaLocation'] = "http://www.topografix.com/GPX/#{version_dir} http://www.topografix.com/GPX/#{version_dir}/gpx.xsd" if !gpx_header['xsi:schemaLocation']
       gpx_header['xmlns:xsi'] = "http://www.w3.org/2001/XMLSchema-instance" if !gpx_header['xsi'] and !gpx_header['xmlns:xsi']
-      
+
       #$stderr.puts gpx_header.keys.inspect
 
       doc = Nokogiri::XML::Builder.new do |xml|
